@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrar Preguntes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        .container {
+            margin: 20px;
+        }
+        .button-group {
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 15px;
+            margin-right: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        .action-btn {
+            background-color: #28a745;
+            margin-right: 5px;
+        }
+        .delete-btn {
+            background-color: #dc3545;
+        }
+        
+        #formularioPregunta input {
+            width: 30vw;
+            margin-top: 2px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Panell d'Administració de Preguntes</h1>
+</header>
+
+<div class="container">
+    <!-- Botones para acciones principales -->
+    <div class="button-group">
+        <button id="btnListar">Llistar Preguntes</button>
+        <button id="btnAgregar">Afegir nova pregunta</button>
+    </div>
+    <div id="preguntasListadas"></div>
+
+    <!-- Tabla donde se mostrarán las preguntas -->
+    <table id="preguntasTable" style="display: none;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Pregunta</th>
+                <th>Respostes</th>
+                <th>Accions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Aquí se insertarán las preguntas dinámicamente -->
+        </tbody>
+    </table>
+
+    <!-- Formulario para agregar/editar preguntas -->
+    <div id="formularioPregunta" style="display: none;">
+        <h2 id="formTitle">Afegir Pregunta</h2>
+        <label for="pregunta">Pregunta:</label>
+        <input type="text" id="pregunta" name="pregunta"><br><br>
+        
+        <label for="respuestas">Respostes:</label><br>
+        <input type="text" id="respuesta1" placeholder="Respuesta 1"><br>
+        <input type="text" id="respuesta2" placeholder="Respuesta 2"><br>
+        <input type="text" id="respuesta3" placeholder="Respuesta 3"><br>
+        <input type="text" id="respuesta4" placeholder="Respuesta 4"><br><br>
+
+        <label for="correcta">Resposta Correcta (1-4):</label>
+        <input type="number" id="correcta" name="correcta" min="1" max="4"><br><br>
+
+        <button id="guardarPregunta">Guardar</button>
+    </div>
+</div>
+
+<script>
+// Variables globales
+let preguntas = [];
+let modoEditar = false;
+let preguntaActualId = null;
+
+// Función para listar preguntas
+function listarPreguntas() {
+    fetch('../backend/getPreguntesadmin.php')
+        .then(response => response.json())
+        .then(data => {
+            console.log("Estructura de datos recibida desde el backend:", data);
+            preguntas = data;
+            console.log("Preguntas cargadas desde el backend:", data); // Verifica el contenido de las preguntas
+
+            preguntas = data;
+            let tableBody = document.querySelector('#preguntasTable tbody');
+            tableBody.innerHTML = ''; // Limpiar la tabla
+
+            document.getElementById('preguntasTable').style.display = 'table';
+
+            data.forEach(pregunta => {
+                let respuestasText = pregunta.respostes.map(r => r.etiqueta).join(', ');
+
+                let row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${pregunta.id}</td>
+                    <td>${pregunta.pregunta}</td>
+                    <td>${respuestasText}</td>
+                    <td>
+                        <button class="action-btn" onclick="editarPregunta(${pregunta.id})">Editar</button>
+                        <button class="delete-btn" onclick="borrarPregunta(${pregunta.id})">Esborrar</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        })
+        .catch(error => console.error('Error al listar preguntas:', error));
+}
+
+// Función para borrar una pregunta
+function borrarPregunta(id) {
+    if (confirm('¿Estás seguro de eliminar esta pregunta?')) {
+        fetch(`../backend/borrarPregunta.php?id=${id}`)
+            .then(response => {
+                console.log('Respuesta eliminada:', id); // Ver si la respuesta es la esperada
+                if (response.ok) {
+                    listarPreguntas(); // Refrescar la lista después de borrar
+                } else {
+                    alert('Error al borrar la pregunta');
+                }
+            })
+            .catch(error => console.error('Error al borrar la pregunta:', error));
+    }
+}
+
+// Función para editar una pregunta
+function editarPregunta(id) {
+    console.log("ID recibido para editar:", id); // Verifica que el ID es el correcto
+
+    modoEditar = true;
+    preguntaActualId = id;
+
+    // Buscar la pregunta por su ID
+    const pregunta = preguntas.find(p => p.id == id); // Compara usando '==' en lugar de '===' para evitar problemas de tipo de datos
+    console.log("Pregunta encontrada:", pregunta); // Verifica si la pregunta fue encontrada
+
+    if (!pregunta) {
+        alert("No se ha encontrado la pregunta seleccionada.");
+        return;  // Si no se encuentra, no continúa
+    }
+
+    // Llenar el formulario con los datos de la pregunta a editar
+    document.getElementById('pregunta').value = pregunta.pregunta;
+    document.getElementById('respuesta1').value = pregunta.respostes[0].etiqueta;
+    document.getElementById('respuesta2').value = pregunta.respostes[1].etiqueta;
+    document.getElementById('respuesta3').value = pregunta.respostes[2].etiqueta;
+    document.getElementById('respuesta4').value = pregunta.respostes[3].etiqueta;
+    document.getElementById('correcta').value = pregunta.correcta;
+
+    // Mostrar el formulario
+    document.getElementById('formularioPregunta').style.display = 'block';
+    document.getElementById('formTitle').textContent = 'Editar Pregunta';
+}
+
+function guardarPregunta() {
+    // Validar que todos los campos esten completos
+    const preguntaTexto = document.getElementById('pregunta').value;
+    const respuesta1 = document.getElementById('respuesta1').value;
+    const respuesta2 = document.getElementById('respuesta2').value;
+    const respuesta3 = document.getElementById('respuesta3').value;
+    const respuesta4 = document.getElementById('respuesta4').value;
+    const correcta = parseInt(document.getElementById('correcta').value);
+
+    // Verificar que todos los campos requeridos esten llenos
+    if (!preguntaTexto || !respuesta1 || !respuesta2 || !respuesta3 || !respuesta4 || isNaN(correcta)) {
+        alert('Por favor, completa todos los campos antes de guardar.');
+        return;  // Detener la ejecución si hay campos incompletos
+    }
+
+    // Si estamos editando, obtenemos las respuestas existentes; si no, dejamos el array vacío
+    let respostes = modoEditar ? preguntas.find(pregunta => parseInt(pregunta.id) === preguntaActualId)?.respostes || [] : [];
+
+    // Si estamos agregando una nueva pregunta, omitimos el campo `id` y lo enviamos solo en modo editar
+    const nuevaPregunta = {
+        pregunta: preguntaTexto,
+        respostes: [
+            { etiqueta: respuesta1, id: respostes[0]?.id || null },
+            { etiqueta: respuesta2, id: respostes[1]?.id || null },
+            { etiqueta: respuesta3, id: respostes[2]?.id || null },
+            { etiqueta: respuesta4, id: respostes[3]?.id || null }
+        ],
+        correcta: correcta
+    };
+
+    // Si estamos en modo de edición, añadimos el campo `id` de la pregunta
+    if (modoEditar) {
+        nuevaPregunta.id = preguntaActualId;
+    }
+
+    console.log('Datos enviados al backend:', nuevaPregunta);  // Verifica qué se está enviando
+
+    // Determinamos si es para crear o editar la pregunta
+    const url = modoEditar ? '../backend/editarPregunta.php' : '../backend/crearPregunta.php';
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(nuevaPregunta)
+    })
+    .then(response => response.text())  
+    .then(data => {
+        console.log('Respuesta crud del servidor:', data);  // Muestra la respuesta del servidor como texto
+        try {
+            const jsonData = JSON.parse(data);  // Intentamos convertirlo a JSON
+            if (jsonData.success) {
+                listarPreguntas();  
+                document.getElementById('formularioPregunta').style.display = 'none';
+            } else {
+                alert('Error al guardar la pregunta: ' + jsonData.message);
+            }
+        } catch (error) {
+            console.error('Error al procesar la respuesta JSON:', error, data);
+            alert('La respuesta del servidor no es JSON válida. Revisa la consola para más detalles.');
+        }
+    })
+    .catch(error => {
+        console.error('Error al guardar la pregunta:', error);
+    });
+}
+
+
+
+// Mostrar el formulario para agregar una nueva pregunta
+document.getElementById('btnAgregar').addEventListener('click', () => {
+    modoEditar = false;
+    preguntaActualId = null;
+    document.getElementById('formularioPregunta').style.display = 'block';
+    document.getElementById('formTitle').textContent = 'Agregar Pregunta';
+});
+
+document.getElementById('btnListar').addEventListener('click', listarPreguntas);
+
+document.getElementById('guardarPregunta').addEventListener('click', guardarPregunta);
+
+</script>
+
+</body>
+</html>
