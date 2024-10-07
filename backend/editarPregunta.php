@@ -3,12 +3,12 @@ header('Content-Type: application/json');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-include 'conexio.php'; // Incluir el archivo de conexión
+include 'conexio.php'; 
 
-// Recibir los datos enviados por el frontend
+
 $data = json_decode(file_get_contents("php://input"), true);
 
-// Verificar si se han recibido todos los datos necesarios
+
 if (isset($data['id'], $data['pregunta'], $data['respostes'], $data['correcta'])) {
     // Iniciar una transacción
     $conn->begin_transaction();

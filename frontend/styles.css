@@ -3,41 +3,39 @@ body {
     font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f0f8ff; /* Color de fondo agradable */
+    background-color: #f0f8ff; 
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Centrar verticalmente */
+    height: 100vh; 
     flex-direction: column;
 }
 
 /* Títulos */
 h2 {
-    color: #003366; /* Color azul oscuro para los títulos */
-    font-size: 42px; /* Tamaño de fuente más grande */
+    color: #003366; 
+    font-size: 42px; 
     text-align: center;
     margin-bottom: 20px;
 }
 
-/* Estilos del contenedor principal */
 #partida {
-    background-color: #ffffff; /* Fondo blanco para el contenedor de contenido */
-    padding: 40px; /* Mayor espaciado interno */
+    background-color: #ffffff; 
+    padding: 40px; 
     border-radius: 12px;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); /* Sombra sutil */
-    max-width: 800px; /* Ancho máximo de la tarjeta */
-    width: 90%; /* Ancho completo en móviles */
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); 
+    max-width: 800px; 
+    width: 90%; 
 }
 
 #partida p {
     font-size: 22px;
 }
 
-/* Estilos para el formulario */
 form {
     display: flex;
-    flex-direction: column; /* Colocar elementos en columna */
-    align-items: center; /* Centrar horizontalmente */
+    flex-direction: column; 
+    align-items: center; 
     height: 17vh;
     justify-content: space-around;
     gap: 10px;
@@ -45,158 +43,149 @@ form {
 
 input[type="text"],
 input[type="number"] {
-    width: 100%; /* Ancho completo */
-    padding: 12px; /* Espaciado interno aumentado */
-    border: 2px solid #007bff; /* Borde azul */
-    border-radius: 5px; /* Bordes redondeados */
-    font-size: 20px; /* Tamaño de fuente más grande */
+    width: 100%; 
+    padding: 12px; 
+    border: 2px solid #007bff; 
+    border-radius: 5px;
+    font-size: 20px; 
 }
 
 input[type="text"]::placeholder,
 input[type="number"]::placeholder {
-    color: #888; /* Color del placeholder */
+    color: #888; 
 }
 
-/* Estilo para la tarjeta de pregunta */
 .preguntaWrapper {
-    display: flex; /* Usar flexbox para la disposición */
-    align-items: flex-start; /* Alinear elementos al inicio */
-    background-color: #ffffff; /* Fondo blanco para la tarjeta de pregunta */
-    padding: 30px; /* Espaciado interno aumentado */
-    border-radius: 12px; /* Bordes redondeados */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-    margin-top: 20px; /* Espacio entre tarjetas */
+    display: flex; 
+    align-items: flex-start; 
+    background-color: #ffffff; 
+    padding: 30px; 
+    border-radius: 12px; 
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
+    margin-top: 20px; 
 }
 
-/* Contenedor para la imagen */
 .imagenOpciones {
-    display: flex; /* Usar flexbox para alinear imagen y opciones */
-    flex: 1; /* Permitir que este contenedor ocupe el espacio disponible */
+    display: flex; 
+    flex: 1; 
 }
 
-/* Estilo para la imagen */
 .preguntaContent img {
-    max-width: 400px; /* Ancho máximo de la imagen más grande */
-    height: auto; /* Mantener proporción */
-    margin-right: 30px; /* Espacio entre la imagen y las opciones */
+    max-width: 400px; 
+    height: auto; 
+    margin-right: 30px; 
 }
 
-/* Estilo para las opciones */
 .opciones {
     display: flex;
-    flex-direction: column; /* Organizar opciones en columna */
-    justify-content: center; /* Centrar verticalmente */
-    flex: 1; /* Permitir que ocupe espacio */
+    flex-direction: column; 
+    justify-content: center; 
+    flex: 1; 
 }
 
-/* Botones */
 button {
-    padding: 12px 24px; /* Espaciado interno */
-    background-color: #007bff; /* Azul para los botones */
-    color: white; /* Texto blanco */
-    border: none; /* Sin borde */
-    border-radius: 5px; /* Bordes redondeados */
-    cursor: pointer; /* Cursor tipo puntero */
-    font-size: 20px; /* Tamaño de fuente más grande */
-    transition: background-color 0.3s; /* Transición para el hover */
+    padding: 12px 24px; 
+    background-color: #007bff; 
+    color: white; 
+    border: none; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    font-size: 20px; 
+    transition: background-color 0.3s; 
 }
 
 button:hover {
-    background-color: #0056b3; /* Azul más oscuro al pasar el ratón */
+    background-color: #0056b3; 
 }
 
-/* Estilos para el botón de borrar nombre */
 .botonAuxiliar {
-    background-color: #f44336; /* Rojo para el botón de borrar nombre */
-    margin-top: 10px; /* Margen superior */
+    background-color: #f44336; 
+    margin-top: 10px; 
 }
 
 .botonAuxiliar:hover {
-    background-color: #d32f2f; /* Más oscuro en hover */
+    background-color: #d32f2f; 
 }
 
-/* Estilos para el botón de inicio */
 .botonInicio {
-    margin-top: 20px; /* Margen superior */
-    padding: 12px 24px; /* Espaciado interno */
-    background-color: #28a745; /* Verde para volver al inicio */
-    color: white; /* Texto blanco */
-    border: none; /* Sin borde */
-    border-radius: 5px; /* Bordes redondeados */
-    display: block; /* Mostrar como bloque */
+    margin-top: 20px; 
+    padding: 12px 24px; 
+    background-color: #28a745; 
+    color: white; 
+    border: none; 
+    border-radius: 5px; 
+    display: block; 
 }
 
 .botonInicio:hover {
-    background-color: #218838; /* Verde más oscuro al pasar el ratón */
+    background-color: #218838; 
 }
 
-/* Estilo para el botón de administrar */
 .adminWrapper {
-    position: absolute; /* Posición absoluta */
-    bottom: 20px; /* A 20px del fondo */
-    right: 20px; /* A 20px de la derecha */
+    position: absolute; 
+    bottom: 20px; 
+    right: 20px; 
 }
 
-/* Ajustes para pantallas pequeñas */
 @media (max-width: 480px) {
     body {
-        padding: 10px; /* Espaciado interno */
+        padding: 10px; 
     }
     
     #partida {
-        max-width: 100%; /* Ancho completo en móviles */
-        padding: 20px; /* Espaciado interno */
+        max-width: 100%; 
+        padding: 20px; 
     }
     
     button {
-        width: 100%; /* Botones de ancho completo */
+        width: 100%; 
     }
 
     .preguntaWrapper img {
-        max-width: 100%; /* Imagen de ancho completo en móviles */
-        height: auto; /* Mantener proporción */
+        max-width: 100%; 
+        height: auto; 
     }
 }
 
 
 body {
-    background-image: url('../frontend/images/mosaico.jpg'); /* Ruta de la imagen */
-    background-size: cover; /* Para que la imagen ocupe toda la pantalla */
-    background-position: center; /* Centrar la imagen */
-    background-repeat: no-repeat; /* Evitar que la imagen se repita */
-    background-attachment: fixed; /* Mantener la imagen fija al hacer scroll */
+    background-image: url('../frontend/images/mosaico.jpg'); 
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+    background-attachment: fixed; 
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif; /* Ajusta la fuente si lo deseas */
+    font-family: Arial, sans-serif; 
 }
 .preguntaWrapper {
     display: flex;
-    flex-direction: column; /* Cambiamos la dirección de flex a columna para centrar el contenido verticalmente */
-    align-items: center; /* Centrar en la pantalla */
+    flex-direction: column; 
+    align-items: center; 
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 15px;
     padding: 20px;
     margin: 20px auto;
-    max-width: 800px; /* Ajuste del ancho para hacerlo más pequeño */
+    max-width: 800px; 
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .preguntaWrapper .preguntaContent {
     flex: 1;
-    text-align: center; /* Para centrar la pregunta */
+    text-align: center; 
     margin-bottom: 20px;
 }
 
 .preguntaWrapper .imagenOpciones {
     display: flex;
     justify-content: space-between;
-    width: 100%; /* Ocupar todo el ancho del contenedor */
-    gap: 20px; /* Espacio entre la imagen y las opciones */
+    width: 100%; 
+    gap: 20px; 
 }
 
 .preguntaWrapper img {
-    max-width: 40%; /* Ajuste para que la imagen ocupe un 40% del ancho disponible */
+    max-width: 40%; 
     max-height: 300px;
     object-fit: contain;
     border-radius: 10px;
@@ -271,5 +260,44 @@ body {
     background-color: #1c77c3;
     transform: scale(0.98);
 }
+
+#temporizador {
+    background-color: #007bff; 
+    color: white;
+    font-size: 24px; 
+    font-weight: bold; 
+    padding: 12px 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); 
+    text-align: center; 
+    display: inline-block; 
+    margin-top: 20px; 
+    cursor: default; 
+    transition: background-color 0.3s ease, transform 0.2s ease; 
+}
+
+#temporizador:hover {
+    background-color: #0056b3; 
+    transform: scale(1.05); 
+}
+
+.logoContainer {
+    position: absolute;
+    top: 20px; 
+    right: 20px; 
+    z-index: 1000; 
+}
+
+.logo {
+    width: 300px; 
+    height: auto; 
+}
+
+@media (max-width: 768px) {
+    .logo {
+        width: 80px; 
+    }
+}
+
 
 

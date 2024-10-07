@@ -3,8 +3,10 @@ let estatdelaPartida = {
     preguntes: [],
     contadorRespostes: 0,
     preguntaActual: 0,
-    contadorCorrectes: 0
+
 };
+let tiempoInicio = null;
+let intervaloCronometro = null;
 
 // Elementos del DOM
 const partidaDiv = document.getElementById("partida");
@@ -31,7 +33,7 @@ function renderPaginaInicial() {
         document.getElementById("borrarNombre").addEventListener("click", borrarNombreUsuario);
     } else {
         partidaDiv.innerHTML = `
-            <h2>Endevina la pel·lícula</h2>
+            <h2>Endevina l'any de la pel·lícula</h2>
             <form id="formularioNombre">
                 <input type="text" id="nombreUsuario" placeholder="Introdueix el teu nom" required>
                 <input type="number" id="numeroPreguntas" min="1" max="50" placeholder="Nombre de pel·lícules que vols jugar" required>
@@ -42,7 +44,6 @@ function renderPaginaInicial() {
         document.getElementById("formularioNombre").addEventListener("submit", manejarEnvioNombre);
     }
 }
-
 
 // Función para manejar el envío del nombre y comenzar el juego
 function manejarEnvioNombre(event) {
@@ -82,12 +83,23 @@ function reiniciarEstadoPartida() {
         preguntes: [],
         contadorRespostes: 0,
         preguntaActual: 0,
-   
     };
-    marcadorDiv.innerHTML = '';  // Limpiar el marcador
-    partidaDiv.innerHTML = '';   // Limpiar la pantalla de preguntas
-    finalizarButton.style.display = "none"; // Ocultar el botón de finalizar
+
+    marcadorDiv.innerHTML = '';  
+    partidaDiv.innerHTML = '';   
+    finalizarButton.style.display = "none"; 
+
+    // Iniciar cronómetro
+    tiempoInicio = new Date();  
+    clearInterval(intervaloCronometro); 
+
+    intervaloCronometro = setInterval(() => {
+        let tiempoActual = (new Date() - tiempoInicio) / 1000;  // Tiempo en segundos
+        document.getElementById("temporizador").textContent = `Temps: ${tiempoActual.toFixed(1)} segons`;
+    }, 100);  
 }
+
+
 // Función para obtener preguntas del backend
 function obtenirPreguntes(numPreguntes) {
     fetch(`../backend/getPreguntes.php?numPreguntes=${numPreguntes}`)
@@ -98,7 +110,7 @@ function obtenirPreguntes(numPreguntes) {
             return response.json();
         })
         .then(data => {
-            console.log(data); // Añadir un console.log aquí para ver qué se recibe
+            //console.log(data); // Añadir un console.log aquí para ver qué se recibe
             if (data.error) {
                 throw new Error(data.error);
             }
@@ -108,21 +120,19 @@ function obtenirPreguntes(numPreguntes) {
 }
 
 
-
 // Función para pintar preguntas en el DOM
 function pintaPreguntes(preguntes) {
     estatdelaPartida.preguntes = preguntes.map((p) => ({
         pregunta: p.pregunta,
-        respostes: p.respostes,
-        resposta: -1, // Inicialmente no hay respuesta
+        respostes: p.respostes,  
+        respuestaElegida: -1, 
         imatge: p.imatge,
         id: p.id
     }));
 
     estatdelaPartida.preguntaActual = 0;
-    console.log(estatdelaPartida.preguntes); // Añadir un console.log aquí para verificar las preguntas
     mostrarPregunta(estatdelaPartida.preguntaActual);
-    finalizarButton.style.display = "flex"; 
+    finalizarButton.style.display = "flex";
 }
 
 // Función para mostrar una pregunta con botones de navegación
@@ -130,29 +140,27 @@ function mostrarPregunta(index) {
     const pregunta = estatdelaPartida.preguntes[index];
     let htmlString = `<div class='preguntaWrapper' data-pregunta-index="${index}">`;
 
-    // Mostrar la pregunta en el centro
+    // Mostrar la pregunta
     htmlString += `<div class='preguntaContent'>`;
     htmlString += `<p>${index + 1}. ${pregunta.pregunta}</p>`;
     htmlString += `</div>`;
 
-    // Contenedor para la imagen y las opciones, uno al lado del otro
     htmlString += `<div class='imagenOpciones'>`;
 
-    // Mostrar la imagen a la izquierda
     if (pregunta.imatge) {
         htmlString += `<img src="${pregunta.imatge}" alt="Pregunta ${index + 1}">`;
     }
 
-    // Mostrar las opciones a la derecha
+    // Mostrar las opciones
     htmlString += `<div class='opciones'>`;
     pregunta.respostes.forEach((resp, j) => {
         htmlString += `<button class="opcion-btn" data-opcion-index="${resp.id}">${String.fromCharCode(65 + j)}: ${resp.etiqueta}</button>`;
     });
     htmlString += `</div>`;
 
-    htmlString += `</div>`; // Cerrar el contenedor de imagen y opciones
+    htmlString += `</div>`;  
 
-    // Botones de navegación (atrás y adelante)
+    // Botones de navegación
     htmlString += `<footer class="navigationButtons">`;
     if (index > 0) {
         htmlString += `<button class="botonAtras">Endarrera</button>`;
@@ -162,34 +170,24 @@ function mostrarPregunta(index) {
     }
     htmlString += `</footer>`;
 
-    htmlString += `</div>`; // Cerrar la preguntaWrapper
+    htmlString += `</div>`;  
+
+    // Actualizar solo las preguntas, sin eliminar el cronómetro
     partidaDiv.innerHTML = htmlString;
 }
 
 
-// Función para gestionar las respuestas
+
 function reaccio(preguntaIndex, idResposta) {
     const pregunta = estatdelaPartida.preguntes[preguntaIndex];
-    if (idResposta === pregunta.resposta_correcta) {
-        estatdelaPartida.contadorCorrectes++;
-    }
     
-    if (pregunta.resposta === -1) { // Solo permite responder si no ha sido respondida
+    if (pregunta.respuestaElegida === -1) { // Solo permite responder si no ha sido respondida
         estatdelaPartida.contadorRespostes++;
-
-    
-        // Guardar la respuesta del usuario
-        pregunta.resposta = idResposta;
-
-        estatdelaPartida.preguntaActual++;
-
-        if (estatdelaPartida.preguntaActual < estatdelaPartida.preguntes.length) {
-            mostrarPregunta(estatdelaPartida.preguntaActual);
-        } else {
-            finalizarJuego(); // Finaliza el juego
-        }
+        // Guardar la respuesta elegida del usuario
+        pregunta.respuestaElegida = idResposta;
     }
 }
+
 
 
 function irAtras() {
@@ -201,7 +199,7 @@ function irAtras() {
 
 function irAdelante() {
     if (estatdelaPartida.preguntaActual < estatdelaPartida.preguntes.length - 1) {
-        estatdelaPartida.preguntaActual++;  // Sumar uno al índice actual
+        estatdelaPartida.preguntaActual++;  
         mostrarPregunta(estatdelaPartida.preguntaActual);  // Mostrar la siguiente pregunta
     }
 }
@@ -212,7 +210,7 @@ partidaDiv.addEventListener("click", (e) => {
         const preguntaIndex = parseInt(e.target.closest('.preguntaWrapper').dataset.preguntaIndex);
         const respuestaIndex = parseInt(e.target.dataset.opcionIndex);
         
-        reaccio(preguntaIndex, respuestaIndex);
+        reaccio(preguntaIndex, respuestaIndex); // Registrar respuesta, pero no avanzar
     }
 
     if (e.target.classList.contains("botonAtras")) {
@@ -224,8 +222,14 @@ partidaDiv.addEventListener("click", (e) => {
     }
 });
 
+
 // Función para finalizar el juego (envía respuestas al backend)
 function finalizarJuego() {
+    clearInterval(intervaloCronometro);  // Detener el cronómetro
+
+    let tiempoTotal = (new Date() - tiempoInicio) / 1000;  // Calcular el tiempo total en segundos
+
+    // Código para enviar respuestas al backend
     let respostesUsuari = generarBodyDeRespuestas();
 
     fetch('../backend/finalitza.php', {
@@ -242,9 +246,7 @@ function finalizarJuego() {
         return response.json();
     })
     .then(data => {
-        mostrarResultadoFinal(data.correctes, data.totalPreguntes, data.detallesRespuestas);
-        //localStorage.removeItem("nombreUsuario"); // Eliminar el nombre del usuario
-        //renderPaginaInicial(); // Volver a la página inicial
+        mostrarResultadoFinal(data.correctes, data.totalPreguntes, data.detallesRespuestas, tiempoTotal);
         tornarIniciButton.style.display = "flex";
         finalizarButton.style.display = "none";
     })
@@ -252,29 +254,30 @@ function finalizarJuego() {
 }
 
 
+
 // Función para generar el cuerpo de respuestas a enviar al backend
 function generarBodyDeRespuestas() {
     let body = [];
     
-    // Recorremos todas las preguntas y guardamos las respuestas
     for (let i = 0; i < estatdelaPartida.preguntes.length; i++) {
         let bodyObj = {
             "idPregunta": estatdelaPartida.preguntes[i].id,
-            "idResposta": estatdelaPartida.preguntes[i].resposta // Guardamos la respuesta elegida
-        }
-        body.push(bodyObj); // Añadimos al cuerpo
+            "idResposta": estatdelaPartida.preguntes[i].respuestaElegida // Solo la respuesta elegida
+        };
+        body.push(bodyObj); 
     }
     
-    return body; // Devolvemos el cuerpo de respuestas
+    return body; 
 }
 
-
-// Función para mostrar el resultado final con la lista de preguntas y respuestas correctas
-function mostrarResultadoFinal(correctes, totalPreguntes, detalleRespuestas) {
+function mostrarResultadoFinal(correctes, totalPreguntes, detalleRespuestas, tiempoTotal) {
     // Mostrar cuántas preguntas se han acertado
-    partidaDiv.innerHTML = `<h2>¡Has acertado ${correctes}/${totalPreguntes} preguntas!</h2>`;
+    partidaDiv.innerHTML = `<h2>¡Has acertat ${correctes}/${totalPreguntes} preguntes!</h2>`;
+    
+    // Mostrar el tiempo total con una sola decimal
+    partidaDiv.innerHTML += `<h3>Temps total: ${tiempoTotal.toFixed(1)} segons</h3>`;
 
-    let htmlString = '<ul>'; // Iniciar la lista
+    let htmlString = '<ul>';
 
     // Iterar sobre cada pregunta para mostrar detalles
     detalleRespuestas.forEach((detalle, index) => {
@@ -288,45 +291,34 @@ function mostrarResultadoFinal(correctes, totalPreguntes, detalleRespuestas) {
 
             let textoPregunstaSeleccionada = 
                 pregunta.respostes.find(respuesta => parseInt(respuesta.id) === detalle.respuestaUsuario)?.etiqueta || "no s'ha trobat la resposta";
-            // Comenzar el elemento de la lista para esta pregunta
+
             htmlString += `<li><strong>Pregunta ${index + 1}:</strong> ${textoPregunta}<br>`;
 
-            // Mostrar la respuesta correcta
-            htmlString += `Respuesta correcta: <strong>${textoRespuestaCorrecta}</strong><br>`;
+            htmlString += `Resposta correcta: <strong>${textoRespuestaCorrecta}</strong><br>`;
 
-            // Mostrar la respuesta del usuario
-            htmlString += `Tu respuesta: <strong>${textoPregunstaSeleccionada}</strong><br>`;
+            htmlString += `La teva resposta: <strong>${textoPregunstaSeleccionada}</strong><br>`;
 
-            // Mostrar si la respuesta fue correcta o incorrecta
             if (detalle.isCorrecta) {
                 htmlString += `<span style="color: green;">Estado: <strong>Correcta</strong></span><br>`; // Respuesta correcta
             } else {
                 htmlString += `<span style="color: red;">Estado: <strong>Incorrecta</strong></span><br>`; // Respuesta incorrecta
             }
 
-            htmlString += `</li>`; // Cerrar el elemento de la lista
+            htmlString += `</li>`; 
         }
-        
     });
 
-    htmlString += '</ul>'; // Cerrar la lista
-    partidaDiv.innerHTML += htmlString; // Agregar la lista al div de resultados
+    htmlString += '</ul>'; 
+    partidaDiv.innerHTML += htmlString; 
 
-    // Mostrar el botón de "Volver al inicio" (si aplica)
-    finalizarButton.style.display = "none"; // Ocultar el botón de finalizar
-    document.getElementById("inicio").style.display = "block"; // Mostrar el botón de volver al inicio
+    finalizarButton.style.display = "none"; 
+    document.getElementById("inicio").style.display = "block"; 
 }
 
-
-
-
-// Función para finalizar el juego (envía respuestas al backend)
 finalizarButton.addEventListener("click", function() {
    finalizarJuego();
 });
 
-
-// Iniciar la SPA
 renderPaginaInicial();
 
 

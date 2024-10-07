@@ -1,33 +1,29 @@
 <?php
-include 'conexio.php';  // Conexión a la base de datos
+// Iniciar la sesión
+session_start();
+include 'conexio.php'; 
 
-// Obtener el ID de la pregunta a eliminar desde la URL
-if (!isset($_GET['id'])) {
-    echo json_encode(["error" => "ID de pregunta no proporcionado"]);
+$input = file_get_contents('php://input');
+$data = json_decode($input, true);
+
+if (!isset($data['idPregunta'])) {
+    echo json_encode(["error" => "ID de la pregunta no proporcionado."]);
     exit();
 }
 
-$pregunta_id = $_GET['id'];
+$idPregunta = $data['idPregunta'];
 
-try {
-    // Empezar la transacción
-    $conn->beginTransaction();
+// Borrar la pregunta de la base de datos
+$sql = "DELETE FROM preguntess WHERE id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $idPregunta);
 
-    // Eliminar la pregunta (puedes eliminar las respuestas si fuera necesario, pero no está claro si tienes una tabla separada)
-    $sql_pregunta = "DELETE FROM preguntess WHERE id = ?";
-    $stmt_pregunta = $conn->prepare($sql_pregunta);
-    $stmt_pregunta->execute([$pregunta_id]);
-
-    // Confirmar la transacción
-    $conn->commit();
-
-    echo json_encode(["success" => true]);
-
-} catch (PDOException $e) {
-    // En caso de error, revertir la transacción
-    $conn->rollBack();
-    echo json_encode(["success" => false, "message" => $e->getMessage()]);
+if ($stmt->execute()) {
+    echo json_encode(["mensaje" => "Pregunta eliminada correctamente."]);
+} else {
+    echo json_encode(["error" => "Error al eliminar la pregunta."]);
 }
 
-$conn = null;
+$stmt->close();
+$conn->close();
 ?>

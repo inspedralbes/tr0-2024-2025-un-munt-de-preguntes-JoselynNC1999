@@ -1,10 +1,8 @@
 <?php
-session_start(); // Iniciar sesión
+session_start(); 
 
-// Incluir la conexión a la base de datos
-include 'conexio.php'; // Asegúrate de que este archivo contiene la variable $conn
+include 'conexio.php'; 
 
-// Asegúrate de que las variables de sesión existen
 if (!isset($_SESSION['puntuacion'])) {
     $_SESSION['puntuacion'] = 0;
 }
@@ -12,7 +10,6 @@ if (!isset($_SESSION['puntuacion'])) {
 // Obtener el número de preguntas solicitado
 $numPreguntes = isset($_GET['numPreguntes']) ? intval($_GET['numPreguntes']) : 10;
 
-// Obtener preguntas aleatorias y asegurar que sean únicas
 $sql_preguntes = "
     SELECT DISTINCT p.id AS pregunta_id, p.pregunta, p.resposta_correcta, p.imatge
     FROM preguntess p
@@ -79,10 +76,7 @@ while ($row = $result_respostes->fetch_assoc()) {
 $preguntes_finales = [];
 foreach ($preguntes as $pregunta) {
     if (count($pregunta['respostes']) == 4) {
-        // Asegurar que las respuestas están ordenadas aleatoriamente en cada pregunta
         shuffle($pregunta['respostes']);
-
-        // Remover la respuesta correcta si no la necesitas en la salida
         unset($pregunta['resposta_correcta']);
         $preguntes_finales[] = $pregunta;
     }
@@ -94,12 +88,10 @@ if (count($preguntes_finales) < $numPreguntes) {
         "error" => "No se encontraron suficientes preguntas con 4 respuestas."
     ]);
 } else {
-    // Devolver las preguntas en formato JSON
     header('Content-Type: application/json');
     echo json_encode($preguntes_finales);
 }
 
-// Cerrar conexiones
 $stmt_preguntes->close();
 $conn->close();
 ?>

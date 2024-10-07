@@ -2,7 +2,6 @@
 session_start(); 
 include 'conexio.php'; 
 
-// Asegúrate de que las variables de sesión existen
 if (!isset($_SESSION['puntuacion'])) {
     $_SESSION['puntuacion'] = 0;
 }
@@ -10,7 +9,6 @@ if (!isset($_SESSION['puntuacion'])) {
 $input = file_get_contents('php://input');
 $data = json_decode($input, true);
 
-// Verificar que el array de respuestas existe
 if (!isset($data['respostes'])) {
     echo json_encode(["error" => "No se recibieron respuestas."]);
     exit();
@@ -19,8 +17,7 @@ if (!isset($data['respostes'])) {
 $respuestas = $data['respostes'];
 $puntuacion = 0;
 $totalPreguntes = count($respuestas);
-$detalle[] = [];
-$contador = 0;
+$detalle = []; 
 
 // Lógica para calcular la puntuación
 foreach ($respuestas as $respuesta) {
@@ -41,13 +38,13 @@ foreach ($respuestas as $respuesta) {
         $puntuacion++;
     }
 
-    $detalle[$contador] = [
+    // Guarda los detalles de la respuesta del usuario
+    $detalle[] = [
         "pregunta" => $preguntaId,
-        "respuestaCorrecta" => $resposta_correcta,
+        "respuestaCorrecta" => $resposta_correcta, 
         "respuestaUsuario" => $respuestaId,
-        "isCorrecta" => $respuestaId == $resposta_correcta
+        "isCorrecta" => ($respuestaId == $resposta_correcta) 
     ];
-    $contador++;
 }
 
 // Actualizar la puntuación en la sesión

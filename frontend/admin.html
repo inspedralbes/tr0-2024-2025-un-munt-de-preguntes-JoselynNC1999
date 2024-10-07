@@ -5,62 +5,160 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administrar Preguntes</title>
     <style>
+        /* Colores de la paleta colors.co que dijo Ermengol */
+        :root {
+            --color-fondo: #faf3ef;
+            --color-primario: #d8c3a5;
+            --color-secundario: #eae7dc;
+            --color-acento: #e98074;
+            --color-texto: #834c2e;
+            --color-texto-claro: #f4f4f4;
+            --color-boton: #e98074;
+            --color-boton-hover: #d57267;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            background-color: var(--color-fondo);
+            color: var(--color-texto);
         }
+
         header {
-            background-color: #333;
-            color: white;
-            padding: 10px;
+            background-color:#ffd97d;
+            color: #6c756b;
+            padding: 15px;
             text-align: center;
+            font-size: 24px;
+            font-weight: bold;
         }
+
         .container {
             margin: 20px;
         }
+
         .button-group {
             margin-bottom: 20px;
+            text-align: right;
         }
+
         button {
-            padding: 10px 15px;
-            margin-right: 10px;
+            padding: 10px 20px;
+            border-radius: 5px;
             border: none;
-            background-color: #007bff;
-            color: white;
+            background-color: var(--color-boton);
+            color: var(--color-texto-claro);
+            font-size: 14px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
+
         button:hover {
-            background-color: #0056b3;
+            background-color: var(--color-boton-hover);
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            background-color: #fc8b4a;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
         }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
+
         th, td {
-            padding: 12px;
+            padding: 15px;
             text-align: left;
+            border-bottom: 1px solid #ddd;
         }
+
         th {
-            background-color: #007bff;
-            color: white;
+            background-color: #ffd97d;
+            color: #3a3335;
+            font-weight: bold;
         }
+
+        td {
+            background-color: #fff0d5;
+        }
+
+        tr:hover {
+            background-color: #f0e7d8;
+        }
+
         .action-btn {
-            background-color: #28a745;
+            background-color: #60d394;
+            padding: 8px 15px;
+            border-radius: 5px;
             margin-right: 5px;
+            color: var(--color-texto-claro);
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
+
         .delete-btn {
-            background-color: #dc3545;
+            background-color: #dd4b39;
+            padding: 8px 15px;
+            border-radius: 5px;
+            color: var(--color-texto-claro);
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
-        
+
+        .action-btn:hover, .delete-btn:hover {
+            opacity: 0.8;
+        }
+
+        #formularioPregunta {
+            background-color: var(--color-secundario);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            width: 50%;
+            margin: 20px auto;
+            display: none;
+        }
+
+        #formularioPregunta h2 {
+            text-align: center;
+            color: var(--color-acento);
+        }
+
         #formularioPregunta input {
-            width: 30vw;
-            margin-top: 2px;
+            width: calc(100% - 30px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid var(--color-texto);
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        #guardarPregunta {
+            background-color: var(--color-boton);
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            border: none;
+            color: var(--color-texto-claro);
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #guardarPregunta:hover {
+            background-color: var(--color-boton-hover);
+        }
+
+        @media (max-width: 768px) {
+            #formularioPregunta {
+                width: 90%;
+            }
+
+            button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
         }
     </style>
 </head>
@@ -76,7 +174,6 @@
         <button id="btnListar">Llistar Preguntes</button>
         <button id="btnAgregar">Afegir nova pregunta</button>
     </div>
-    <div id="preguntasListadas"></div>
 
     <!-- Tabla donde se mostrarán las preguntas -->
     <table id="preguntasTable" style="display: none;">
@@ -94,11 +191,11 @@
     </table>
 
     <!-- Formulario para agregar/editar preguntas -->
-    <div id="formularioPregunta" style="display: none;">
+    <div id="formularioPregunta">
         <h2 id="formTitle">Afegir Pregunta</h2>
         <label for="pregunta">Pregunta:</label>
-        <input type="text" id="pregunta" name="pregunta"><br><br>
-        
+        <input type="text" id="pregunta" name="pregunta"><br>
+
         <label for="respuestas">Respostes:</label><br>
         <input type="text" id="respuesta1" placeholder="Respuesta 1"><br>
         <input type="text" id="respuesta2" placeholder="Respuesta 2"><br>
@@ -125,66 +222,70 @@ function listarPreguntas() {
         .then(data => {
             console.log("Estructura de datos recibida desde el backend:", data);
             preguntas = data;
-            console.log("Preguntas cargadas desde el backend:", data); // Verifica el contenido de las preguntas
 
-            preguntas = data;
             let tableBody = document.querySelector('#preguntasTable tbody');
             tableBody.innerHTML = ''; // Limpiar la tabla
 
             document.getElementById('preguntasTable').style.display = 'table';
 
+            let html = '';
             data.forEach(pregunta => {
                 let respuestasText = pregunta.respostes.map(r => r.etiqueta).join(', ');
 
-                let row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${pregunta.id}</td>
-                    <td>${pregunta.pregunta}</td>
-                    <td>${respuestasText}</td>
-                    <td>
-                        <button class="action-btn" onclick="editarPregunta(${pregunta.id})">Editar</button>
-                        <button class="delete-btn" onclick="borrarPregunta(${pregunta.id})">Esborrar</button>
-                    </td>
+                html += `
+                    <tr>
+                        <td>${pregunta.id}</td>
+                        <td>${pregunta.pregunta}</td>
+                        <td>${respuestasText}</td>
+                        <td>
+                            <button class="action-btn" onclick="editarPregunta(${pregunta.id})">Editar</button>
+                            <button class="delete-btn" onclick="borrarPregunta(${pregunta.id})">Esborrar</button>
+                        </td>
+                    </tr>
                 `;
-                tableBody.appendChild(row);
             });
+            tableBody.innerHTML = html;
         })
         .catch(error => console.error('Error al listar preguntas:', error));
 }
 
 // Función para borrar una pregunta
-function borrarPregunta(id) {
-    if (confirm('¿Estás seguro de eliminar esta pregunta?')) {
-        fetch(`../backend/borrarPregunta.php?id=${id}`)
-            .then(response => {
-                console.log('Respuesta eliminada:', id); // Ver si la respuesta es la esperada
-                if (response.ok) {
-                    listarPreguntas(); // Refrescar la lista después de borrar
-                } else {
-                    alert('Error al borrar la pregunta');
-                }
-            })
-            .catch(error => console.error('Error al borrar la pregunta:', error));
+function borrarPregunta(idPregunta) {
+    if (!confirm('Estàs segur que vols eliminar aquesta pregunta?')) {
+        return;
     }
+
+    fetch('../backend/borrarPregunta.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ idPregunta: idPregunta })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert('Error: ' + data.error);
+        } else {
+            alert(data.mensaje);
+            listarPreguntas();
+        }
+    })
+    .catch(error => console.error('Error al eliminar la pregunta:', error));
 }
 
 // Función para editar una pregunta
 function editarPregunta(id) {
-    console.log("ID recibido para editar:", id); // Verifica que el ID es el correcto
-
     modoEditar = true;
     preguntaActualId = id;
 
-    // Buscar la pregunta por su ID
-    const pregunta = preguntas.find(p => p.id == id); // Compara usando '==' en lugar de '===' para evitar problemas de tipo de datos
-    console.log("Pregunta encontrada:", pregunta); // Verifica si la pregunta fue encontrada
+    const pregunta = preguntas.find(p => p.id == id);
 
     if (!pregunta) {
         alert("No se ha encontrado la pregunta seleccionada.");
-        return;  // Si no se encuentra, no continúa
+        return;
     }
 
-    // Llenar el formulario con los datos de la pregunta a editar
     document.getElementById('pregunta').value = pregunta.pregunta;
     document.getElementById('respuesta1').value = pregunta.respostes[0].etiqueta;
     document.getElementById('respuesta2').value = pregunta.respostes[1].etiqueta;
@@ -192,13 +293,12 @@ function editarPregunta(id) {
     document.getElementById('respuesta4').value = pregunta.respostes[3].etiqueta;
     document.getElementById('correcta').value = pregunta.correcta;
 
-    // Mostrar el formulario
     document.getElementById('formularioPregunta').style.display = 'block';
     document.getElementById('formTitle').textContent = 'Editar Pregunta';
 }
 
+// Función para guardar pregunta (crear o editar)
 function guardarPregunta() {
-    // Validar que todos los campos esten completos
     const preguntaTexto = document.getElementById('pregunta').value;
     const respuesta1 = document.getElementById('respuesta1').value;
     const respuesta2 = document.getElementById('respuesta2').value;
@@ -206,16 +306,13 @@ function guardarPregunta() {
     const respuesta4 = document.getElementById('respuesta4').value;
     const correcta = parseInt(document.getElementById('correcta').value);
 
-    // Verificar que todos los campos requeridos esten llenos
-    if (!preguntaTexto || !respuesta1 || !respuesta2 || !respuesta3 || !respuesta4 || isNaN(correcta)) {
-        alert('Por favor, completa todos los campos antes de guardar.');
-        return;  // Detener la ejecución si hay campos incompletos
+    if (!preguntaTexto || !respuesta1 || !respuesta2 || !respuesta3 || !respuesta4 || isNaN(correcta) || correcta < 1 || correcta > 4) {
+        alert('Por favor, completa todos los campos.');
+        return;
     }
 
-    // Si estamos editando, obtenemos las respuestas existentes; si no, dejamos el array vacío
-    let respostes = modoEditar ? preguntas.find(pregunta => parseInt(pregunta.id) === preguntaActualId)?.respostes || [] : [];
+    let respostes = modoEditar ? preguntas.find(pregunta => pregunta.id == preguntaActualId)?.respostes || [] : [];
 
-    // Si estamos agregando una nueva pregunta, omitimos el campo `id` y lo enviamos solo en modo editar
     const nuevaPregunta = {
         pregunta: preguntaTexto,
         respostes: [
@@ -227,14 +324,10 @@ function guardarPregunta() {
         correcta: correcta
     };
 
-    // Si estamos en modo de edición, añadimos el campo `id` de la pregunta
     if (modoEditar) {
         nuevaPregunta.id = preguntaActualId;
     }
 
-    console.log('Datos enviados al backend:', nuevaPregunta);  // Verifica qué se está enviando
-
-    // Determinamos si es para crear o editar la pregunta
     const url = modoEditar ? '../backend/editarPregunta.php' : '../backend/crearPregunta.php';
 
     fetch(url, {
@@ -246,9 +339,8 @@ function guardarPregunta() {
     })
     .then(response => response.text())  
     .then(data => {
-        console.log('Respuesta crud del servidor:', data);  // Muestra la respuesta del servidor como texto
         try {
-            const jsonData = JSON.parse(data);  // Intentamos convertirlo a JSON
+            const jsonData = JSON.parse(data);
             if (jsonData.success) {
                 listarPreguntas();  
                 document.getElementById('formularioPregunta').style.display = 'none';
@@ -257,7 +349,7 @@ function guardarPregunta() {
             }
         } catch (error) {
             console.error('Error al procesar la respuesta JSON:', error, data);
-            alert('La respuesta del servidor no es JSON válida. Revisa la consola para más detalles.');
+            alert('La respuesta del servidor no es JSON válida.');
         }
     })
     .catch(error => {
@@ -265,20 +357,25 @@ function guardarPregunta() {
     });
 }
 
+// Eventos
+document.getElementById('btnListar').addEventListener('click', listarPreguntas);
 
-
-// Mostrar el formulario para agregar una nueva pregunta
 document.getElementById('btnAgregar').addEventListener('click', () => {
     modoEditar = false;
     preguntaActualId = null;
+
+    document.getElementById('pregunta').value = '';
+    document.getElementById('respuesta1').value = '';
+    document.getElementById('respuesta2').value = '';
+    document.getElementById('respuesta3').value = '';
+    document.getElementById('respuesta4').value = '';
+    document.getElementById('correcta').value = '';
+
     document.getElementById('formularioPregunta').style.display = 'block';
-    document.getElementById('formTitle').textContent = 'Agregar Pregunta';
+    document.getElementById('formTitle').textContent = 'Afegir Pregunta';
 });
 
-document.getElementById('btnListar').addEventListener('click', listarPreguntas);
-
 document.getElementById('guardarPregunta').addEventListener('click', guardarPregunta);
-
 </script>
 
 </body>
