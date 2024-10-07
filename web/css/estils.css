@@ -1,0 +1,86 @@
+body {
+    background-color: #f0f8ff; 
+    font-family: Arial, sans-serif;
+    color: #333; 
+    margin: 0;
+    padding: 0;
+}
+
+.contenidorTitol {
+    text-align: center;
+    padding: 20px;
+}
+
+.contenidorTitol h1 {
+    color: #3498db;
+    font-size: 2em;
+}
+
+.preguntaWrapper {
+    display: flex;
+    background-color: #fff; 
+    border: 1px solid #ddd; 
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 800px; /* Ampliado para acomodar imagen y opciones */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); 
+}
+
+.preguntaWrapper .preguntaContent {
+    flex: 1; /* El contenido de la pregunta ocupará el espacio restante */
+    padding-right: 20px; /* Espacio entre la imagen y el contenido */
+}
+
+.preguntaWrapper img {
+    max-width: 300px; /* Ajusta el tamaño de la imagen según sea necesario */
+    height: auto;
+    border-radius: 8px;
+}
+
+.preguntaWrapper .opciones {
+    flex: 1; /* Las opciones ocuparán el espacio restante */
+    text-align: left; 
+    margin-top: 0;
+}
+
+.preguntaWrapper .opciones button {
+    background-color: #3498db;
+    color: white; 
+    border: none;
+    padding: 12px 20px;
+    font-size: 18px;
+    border-radius: 5px;
+    margin: 10px 0; /* Espacio vertical entre botones */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease; 
+}
+
+.preguntaWrapper .opciones button:hover {
+    background-color: #2980b9; 
+    transform: scale(1.05); 
+}
+
+.preguntaWrapper .opciones button:active {
+    background-color: #1c77c3;
+    transform: scale(0.98); 
+}
+
+.correct {
+    color: green;
+    font-weight: bold;
+}
+
+.incorrect {
+    color: red;
+    font-weight: bold;
+}
+
+#reset-btn {
+    display: none;
+    background-color: #27ae60;
+}
+
+#reset-btn:hover {
+    background-color: #1e8449;
+}

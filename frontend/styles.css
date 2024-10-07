@@ -1,0 +1,303 @@
+/* Estilo general */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f8ff; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; 
+    flex-direction: column;
+}
+
+/* Títulos */
+h2 {
+    color: #003366; 
+    font-size: 42px; 
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#partida {
+    background-color: #ffffff; 
+    padding: 40px; 
+    border-radius: 12px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); 
+    max-width: 800px; 
+    width: 90%; 
+}
+
+#partida p {
+    font-size: 22px;
+}
+
+form {
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    height: 17vh;
+    justify-content: space-around;
+    gap: 10px;
+}
+
+input[type="text"],
+input[type="number"] {
+    width: 100%; 
+    padding: 12px; 
+    border: 2px solid #007bff; 
+    border-radius: 5px;
+    font-size: 20px; 
+}
+
+input[type="text"]::placeholder,
+input[type="number"]::placeholder {
+    color: #888; 
+}
+
+.preguntaWrapper {
+    display: flex; 
+    align-items: flex-start; 
+    background-color: #ffffff; 
+    padding: 30px; 
+    border-radius: 12px; 
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
+    margin-top: 20px; 
+}
+
+.imagenOpciones {
+    display: flex; 
+    flex: 1; 
+}
+
+.preguntaContent img {
+    max-width: 400px; 
+    height: auto; 
+    margin-right: 30px; 
+}
+
+.opciones {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center; 
+    flex: 1; 
+}
+
+button {
+    padding: 12px 24px; 
+    background-color: #007bff; 
+    color: white; 
+    border: none; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    font-size: 20px; 
+    transition: background-color 0.3s; 
+}
+
+button:hover {
+    background-color: #0056b3; 
+}
+
+.botonAuxiliar {
+    background-color: #f44336; 
+    margin-top: 10px; 
+}
+
+.botonAuxiliar:hover {
+    background-color: #d32f2f; 
+}
+
+.botonInicio {
+    margin-top: 20px; 
+    padding: 12px 24px; 
+    background-color: #28a745; 
+    color: white; 
+    border: none; 
+    border-radius: 5px; 
+    display: block; 
+}
+
+.botonInicio:hover {
+    background-color: #218838; 
+}
+
+.adminWrapper {
+    position: absolute; 
+    bottom: 20px; 
+    right: 20px; 
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px; 
+    }
+    
+    #partida {
+        max-width: 100%; 
+        padding: 20px; 
+    }
+    
+    button {
+        width: 100%; 
+    }
+
+    .preguntaWrapper img {
+        max-width: 100%; 
+        height: auto; 
+    }
+}
+
+
+body {
+    background-image: url('../frontend/images/mosaico.jpg'); 
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+    background-attachment: fixed; 
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif; 
+}
+.preguntaWrapper {
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 800px; 
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.preguntaWrapper .preguntaContent {
+    flex: 1;
+    text-align: center; 
+    margin-bottom: 20px;
+}
+
+.preguntaWrapper .imagenOpciones {
+    display: flex;
+    justify-content: space-between;
+    width: 100%; 
+    gap: 20px; 
+}
+
+.preguntaWrapper img {
+    max-width: 40%; 
+    max-height: 300px;
+    object-fit: contain;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.preguntaWrapper .opciones {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    text-align: left;
+}
+
+.preguntaWrapper .opciones button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.preguntaWrapper .opciones button:hover {
+    background-color: #2980b9;
+    transform: scale(1.05);
+}
+
+.preguntaWrapper .opciones button:active {
+    background-color: #1c77c3;
+    transform: scale(0.98);
+}
+
+.botonesWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    flex-direction: row;
+}
+
+.botonesWrapper button {
+    margin: 5px;
+}
+
+.navigationButtons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.navigationButtons button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.navigationButtons button:hover {
+    background-color: #2980b9;
+    transform: scale(1.05);
+}
+
+.navigationButtons button:active {
+    background-color: #1c77c3;
+    transform: scale(0.98);
+}
+
+#temporizador {
+    background-color: #007bff; 
+    color: white;
+    font-size: 24px; 
+    font-weight: bold; 
+    padding: 12px 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); 
+    text-align: center; 
+    display: inline-block; 
+    margin-top: 20px; 
+    cursor: default; 
+    transition: background-color 0.3s ease, transform 0.2s ease; 
+}
+
+#temporizador:hover {
+    background-color: #0056b3; 
+    transform: scale(1.05); 
+}
+
+.logoContainer {
+    position: absolute;
+    top: 20px; 
+    right: 20px; 
+    z-index: 1000; 
+}
+
+.logo {
+    width: 300px; 
+    height: auto; 
+}
+
+@media (max-width: 768px) {
+    .logo {
+        width: 80px; 
+    }
+}
+
+
+
