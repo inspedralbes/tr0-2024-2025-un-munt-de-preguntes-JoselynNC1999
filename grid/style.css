@@ -1,0 +1,85 @@
+#graella {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+    grid-auto-rows: minmax(100px, auto);
+    grid-template-areas: 
+    "nav nav header"
+    "center center vacio"
+    "down footer footer";
+}
+h1 {
+    text-align: center;
+}
+
+body{
+    background-color: pink;
+}
+
+#nav {
+    grid-area: nav;
+    background-color: orange;
+}
+
+#header {
+    grid-area: header;
+    background-color: aquamarine;
+}
+
+#center {
+    grid-area: center;
+    background-color: bisque;
+}
+
+#down {
+    grid-area: down;
+    background-color: floralwhite;
+}
+
+#footer {
+    grid-area: footer;
+    background-color: lightcoral;
+}
+.left-align {
+    text-align: left;
+    background-color: #f0f0f0;
+  }
+  .right-align {
+    text-align: right;
+    background-color: #f0f0f0;
+  }
+  .center-align {
+    text-align: center;
+    background-color: #f0f0f0;
+  }
+
+  .vertical-text {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    border: 1px solid black;
+    padding: 5px;
+    width: 50px;
+    background-color: #f0f0f0;
+  }
+
+  .underline {
+    text-decoration: underline;
+  }
+  .line-through {
+    text-decoration: line-through;
+  }
+  .overline {
+    text-decoration: overline;
+  }
+
+  .letter-spacing {
+    letter-spacing: 3px;
+  }
+
+  .uppercase {
+    text-transform: uppercase;
+  }
+  .lowercase {
+    text-transform: lowercase;
+  }
+ 
