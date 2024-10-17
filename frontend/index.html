@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Juego de preguntas sobre películas - Endevina l'any de la pel·lícula">
+    <title>Endevina l'any de la pel·lícula</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Div principal donde se cargan las preguntas y formularios -->
+<div id="partida"></div>
+
+<!-- Div para mostrar el marcador de preguntas -->
+ <div id="marcador"></div>   
+
+ <!-- Div para mostrar el cronómetro en tiempo real -->
+ <div id="temporizador"></div> 
+
+ <div class="botonesWrapper">
+    <!-- Botón para finalizar la partida -->
+    <button id="finalitzar" class="botonAuxiliar" style="display:none;">Finalitzar</button>
+    <!-- Botón para volver al inicio (refresca la página) -->
+    <button id="inicio" class="botonInicio" style="display:none;" onclick="window.location.reload()">Retornar a l'inici</button>
+ </div>
+
+<div class="adminWrapper">
+    <button id="admin" onclick="location.href='admin.html'">Administrar</button>
+</div>
+
+<div class="logoContainer">
+    <img src="../frontend/images/logo.jpg" alt="Logotipo del Instituto" class="logo">
+</div>
+
+<!-- Cargar el archivo de funciones JavaScript -->
+<script src="functions.js"></script>
+
+</body>
+</html>
